@@ -17,9 +17,14 @@ public class Frontend implements FrontendInterface{
     public void runCommandLoop() {
         String command;
         boolean quit = false;
-        displayMainMenu();
         while (!quit) {
+            displayMainMenu();
+            System.out.println("Please enter a command:");
             command = input.nextLine();
+            while (command.isBlank()) {
+                command = input.nextLine();
+            }
+            System.out.println("Command Entered: " + command);
             command = command.toUpperCase();
             switch (command) {
                 case "L":
@@ -36,6 +41,11 @@ public class Frontend implements FrontendInterface{
                     break;
                 case "Q":
                     quit = true;
+                    break;
+                case "":
+                    break;
+                default:
+                    System.out.println("Invalid command. Please try again.");
                     break;
             }
         }
@@ -73,14 +83,21 @@ public class Frontend implements FrontendInterface{
         System.out.println("Would you like to filter your results within a range of years?");
         System.out.println("Please enter \"y\" for yes or \"n\" for no.");
 
-        if (input.nextLine().equals("y") || input.nextLine().equals("yes") || input.nextLine().equals("Y")) {
+        String answer = input.nextLine().toLowerCase();
+        if (answer.equals("y")) {
             System.out.println("Please enter the minimum year:");
+            while (!input.hasNextInt()) {
+                System.out.println("Your input could not be understood. Please enter a number.");
+            }
             yearMin = input.nextInt();
             System.out.println("Please enter the maximum year:");
+            while (!input.hasNextInt()) {
+                System.out.println("Your input could not be understood. Please enter a number.");
+            }
             yearMax = input.nextInt();
             System.out.println("Range set!");
             inputUnderstood = true;
-        } else if (input.nextLine().equals("n") || input.nextLine().equals("N") || input.nextLine().equals("no")) {
+        } else if (answer.equals("n")) {
             System.out.println("Finding results with no range.");
             inputUnderstood = true;
         } else {
@@ -103,10 +120,16 @@ public class Frontend implements FrontendInterface{
     @Override
     public void setFilter() {
         System.out.println("Please enter the desired maximum loudness (0-9):");
+        while (!input.hasNextInt()) {
+            System.out.println("Your input could not be understood. Please enter a number.");
+        }
         int loudnessMax = input.nextInt();
         while (loudnessMax < 0 || loudnessMax > 9) {
             System.out.println("Your desired loudness was not within range.");
             System.out.println("Please enter a number 0-9 for desired maximum loudness:");
+            while (!input.hasNextInt()) {
+                System.out.println("Your input could not be understood. Please enter a number.");
+            }
             loudnessMax = input.nextInt();
         }
         backend.setFilter(loudnessMax);
@@ -120,7 +143,9 @@ public class Frontend implements FrontendInterface{
             System.out.println("No songs found, try changing your year range and/or filter settings.");
         } else {
             System.out.println("Displaying the top " + songs.size() + " most danceable song(s):");
-            System.out.println(songs);
+            for (String song : songs) {
+                System.out.println(song);
+            }
         }
     }
 }
