@@ -1,0 +1,6 @@
+*.class
+.idea
+.checkSubmission
+.gitlab-ci.yml
+**/out/**
+*.iml
